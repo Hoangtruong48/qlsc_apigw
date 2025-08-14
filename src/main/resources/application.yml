@@ -1,0 +1,58 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/your_database?currentSchema=badminton
+    username: postgres
+    password: your_password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update # ho?c 'validate' khi deploy production
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  cloud:
+    gateway:
+      routes:
+        - id : user-service
+          uri : http://localhost:8081
+          predicates:
+            - Path=/user/**
+          filters:
+#            - RemoveRequestHeader=Authorization # Cho login không cần token
+            - StripPrefix=1 # http://localhost:8888/user/login → gọi http://localhost:8081/login
+        - id : court-management-service
+          uri : http://localhost:8082
+          predicates:
+            - Path=/court/**
+          filters:
+            - StripPrefix=1
+
+
+
+server:
+  port: 8888
+
+logging :
+  level :
+    org.springframework.security : DEBUG
+
+jwt :
+  signer_key : "H/iI+s4RM9/p2zSeTtC5u9HM9QzH1IHLZYV/yOVTwf9hCvfaxKwl19hRm0Hw3344"
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html          # vào http://localhost:8888/swagger-ui.html
+    url: /v3/api-docs-merged        # trỏ đến endpoint merge
+
+# (Tuỳ chọn) Danh sách spec của các service để merge
+app:
+  openapi:
+    sources:
+      - http://localhost:8081/v3/api-docs
+      - http://localhost:8082/v3/api-docs
+      - http://localhost:8083/v3/api-docs
+
+
+
