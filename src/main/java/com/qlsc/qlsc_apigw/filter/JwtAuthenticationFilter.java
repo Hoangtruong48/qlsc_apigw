@@ -26,7 +26,7 @@ public class JwtAuthenticationFilter implements GlobalFilter {
         String path = exchange.getRequest().getURI().getPath();
         log.info("[Gateway] Incoming path: {}", path);
 
-        if (path.startsWith("/auth/login")) { // Bỏ qua login
+        if (isPublicPath(path)) {
             log.info("[Gateway] Public endpoint, skipping auth");
             return chain.filter(exchange);
         }
@@ -53,5 +53,13 @@ public class JwtAuthenticationFilter implements GlobalFilter {
         log.info("[Gateway] Token valid for user: {}", username);
 
         return chain.filter(exchange);
+    }
+
+    private boolean isPublicPath(String path) {
+        return path.startsWith("/auth")
+                || path.startsWith("/swagger")
+                || path.startsWith("/v3/api-docs")
+                || path.startsWith("/webjars")
+                || path.startsWith("/favicon.ico");
     }
 }

@@ -18,16 +18,15 @@ spring:
         - id : user-service
           uri : http://localhost:8081
           predicates:
-            - Path=/**
-#          filters:
-##            - RemoveRequestHeader=Authorization # Cho login không cần token
-#            - StripPrefix=1 # http://localhost:8888/user/login → gọi http://localhost:8081/login
+            - Path=/user/**
+          filters:
+            - StripPrefix=1
         - id : court-management-service
           uri : http://localhost:8082
           predicates:
-            - Path=/**
-#          filters:
-#            - StripPrefix=1
+            - Path=/court-management/**
+          filters:
+            - StripPrefix=1
 
 
 
