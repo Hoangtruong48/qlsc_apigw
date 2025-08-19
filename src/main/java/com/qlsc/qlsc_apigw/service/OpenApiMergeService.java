@@ -107,6 +107,16 @@ public class OpenApiMergeService {
         });
 
         merged.setTags(new ArrayList<>(tagByName.values()));
+
+        // ✅ Thêm Bearer Token một lần duy nhất ở đây
+        final String securitySchemeName = "bearerAuth";
+        merged.addSecurityItem(new io.swagger.v3.oas.models.security.SecurityRequirement().addList(securitySchemeName));
+        merged.getComponents().addSecuritySchemes(securitySchemeName,
+                new io.swagger.v3.oas.models.security.SecurityScheme()
+                        .name(securitySchemeName)
+                        .type(io.swagger.v3.oas.models.security.SecurityScheme.Type.HTTP)
+                        .scheme("bearer")
+                        .bearerFormat("JWT"));
         return merged;
     }
 }
