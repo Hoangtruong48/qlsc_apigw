@@ -27,6 +27,12 @@ spring:
             - Path=/court-management/**
           filters:
             - StripPrefix=1
+        - id: booking-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/booking/**
+          filters:
+            - StripPrefix=1
 
 
 
